@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch Posts</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            background: linear-gradient(270deg, #fceabb, #f8b500, #fceabb);
+            background-size: 600% 600%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border: 2px solid #ffd54f;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #e67e22;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            width: 180px;
+            border-radius: 10px;
+            border: 2px solid #f39c12;
+            background-color: #fffaf0;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #e67e22;
+            box-shadow: 0 0 10px #f39c12;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(to right, #f39c12, #e74c3c);
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+        }
+
+        #second {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .post {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid;
+            border-image: linear-gradient(to right, #f39c12, #e74c3c, #8e44ad) 1;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+        }
+
+        .post h4 {
+            margin: 0;
+            font-size: 18px;
+            color: #d35400;
+        }
+
+        .post p {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .form-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            input,
+            button {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Fetch</h1>
+        <div class="form-group">
+            <input type="number" id="inp" placeholder="Enter number of posts">
+            <button onclick="GetData()">Fetch Posts</button>
+        </div>
+        <div id="second"></div>
+    </div>
+
+    <script>
+        function GetData() {
+            const target = document.getElementById("second");
+            const input = document.getElementById("inp");
+            const limit = parseInt(input.value);
+
+            if (!limit || limit <= 0) {
+                alert("Please enter a number greater than 0.");
+                return;
+            }
+
+            target.innerHTML = "";
+
+            fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${limit}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(post => {
+                        const card = document.createElement("div");
+                        card.className = "post";
+
+                        const title = document.createElement("h4");
+                        title.textContent = post.title;
+
+                        const body = document.createElement("p");
+                        body.textContent = post.body;
+
+                        card.appendChild(title);
+                        card.appendChild(body);
+
+                        target.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    target.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f8;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            position: relative;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 12px 30px rgba(193, 4, 4, 0.1);
+            z-index: 1;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--primary));
+            background-size: 300% 300%;
+            border-radius: 24px;
+            z-index: -1;
+            animation: gradientBorder 4s ease infinite;
+        }
+
+        @keyframes gradientBorder {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: var(rgb(255, 89, 0) --primary);
+            margin-bottom: 30px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+            flex: 1;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(221, 121, 7, 0.2);
+        }
+
+        label {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            background: #fff;
+            color: #777;
+            padding: 0 6px;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+        input:focus+label,
+        input:not(:placeholder-shown)+label {
+            top: -10px;
+            left: 12px;
+            font-size: 12px;
+            color: var(--primary);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 5px;
+            height: 16px;
+        }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-field {
+            border-color: var(--error) !important;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 500px) {
+            .input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Register Now</h2>
+
+        <div class="input-row">
+            <div class="input-group">
+                <input type="text" id="firstName" placeholder=" " />
+                <label for="firstName">First Name</label>
+                <p id="VldFirstName" class="error-message"></p>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="lastName" placeholder=" " />
+                <label for="lastName">Last Name</label>
+                <p id="VldLastName" class="error-message"></p>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <input type="email" id="email" placeholder=" " />
+            <label for="email">Email Address</label>
+            <p id="VldEmail" class="error-message"></p>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" placeholder=" " />
+            <label for="password">Password</label>
+            <p id="VldPassword" class="error-message"></p>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="confirmPassword" placeholder=" " />
+            <label for="confirmPassword">Confirm Password</label>
+            <p id="VldConfirm" class="error-message"></p>
+        </div>
+
+        <div class="input-group">
+            <input type="tel" id="phone" placeholder=" " maxlength="10" />
+            <label for="phone">Phone Number</label>
+            <p id="VldPhone" class="error-message"></p>
+        </div>
+
+        <button onclick="validateForm()">Submit</button>
+        <p id="finalMessage"></p>
+    </div>
+
+    <script>
+        function validateForm() {
+            const firstName = document.getElementById("firstName");
+            const lastName = document.getElementById("lastName");
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirmPassword");
+            const phone = document.getElementById("phone");
+
+            const VldFirstName = document.getElementById("VldFirstName");
+            const VldLastName = document.getElementById("VldLastName");
+            const VldEmail = document.getElementById("VldEmail");
+            const VldPassword = document.getElementById("VldPassword");
+            const VldConfirm = document.getElementById("VldConfirm");
+            const VldPhone = document.getElementById("VldPhone");
+            const finalMessage = document.getElementById("finalMessage");
+
+            let isValid = true;
+            const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+            [VldFirstName, VldLastName, VldEmail, VldPassword, VldConfirm, VldPhone].forEach(el => el.textContent = "");
+            [firstName, lastName, email, password, confirmPassword, phone].forEach(el => el.classList.remove("error-field"));
+            finalMessage.textContent = "";
+            finalMessage.className = "";
+
+            if (firstName.value.trim() === "") {
+                VldFirstName.textContent = "First name is required.";
+                firstName.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (lastName.value.trim() === "") {
+                VldLastName.textContent = "Last name is required.";
+                lastName.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (!emailPattern.test(email.value.trim())) {
+                VldEmail.textContent = "Enter a valid email.";
+                email.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (password.value.length < 6) {
+                VldPassword.textContent = "Min 6 characters.";
+                password.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (password.value !== confirmPassword.value) {
+                VldConfirm.textContent = "Passwords don't match.";
+                confirmPassword.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (phone.value.trim().length !== 10 || isNaN(phone.value.trim())) {
+                VldPhone.textContent = "Enter 10-digit number.";
+                phone.classList.add("error-field");
+                isValid = false;
+            }
+
+            if (isValid) {
+                finalMessage.textContent = "Registration Successful! 🎉";
+                finalMessage.className = "success-message";
+            }
+        }
+    </script>
+</body>
+
+</html>
